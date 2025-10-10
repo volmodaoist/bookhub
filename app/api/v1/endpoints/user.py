@@ -9,6 +9,7 @@ from app.storage.user.user_interface import IUserRepository
 from typing import List
 
 
+# 只有查询在接口层暴露批量查询，其余 增/删/改 操作, 只在业务层提供，不对外暴露批量处理的接口
 router = APIRouter()
 
 
@@ -30,46 +31,35 @@ def query_user(student_id: int, repo: IUserRepository = Depends(get_user_repo)):
         return BizResponse(data=None, msg=str(e), status_code=500)
 
 
-# TODO 以下代码尚未完成替换，仍有一部分 db, 需要改成 repo (设计模式里面的仓库模式)
-
-@router.post("/users")
-def create_batch_users(users: List[UserCreate], repo: IUserRepository = Depends(get_user_repo)):
-    try:
-        new_user = user_svc.create_batch_users(repo, users)
-        return BizResponse(data=new_user)
-    except Exception as e:
-        return BizResponse(data=None, msg=str(e), status_code=500)
     
-
-
 @router.post("/users")
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
+def create_user(user: UserCreate, repo: IUserRepository = Depends(get_user_repo)):
     try:
-        new_user = user_svc.create_user(db, user)
-        return BizResponse(data=new_user)
+        user_info = user_svc.create_user(repo, user)
+        return BizResponse(data=user_info)
     except Exception as e:
         return BizResponse(data=None, msg=str(e), status_code=500)
 
 
 
 @router.delete("/users/{student_id}")
-def delete_user(student_id: int, db: Session = Depends(get_db)):
+def delete_user(student_id: int, repo: IUserRepository = Depends(get_user_repo)):
     try:
-        user_svc.delete_user(db, student_id)
-        return BizResponse(data=True)
+        user_info = user_svc.delete_user(repo, student_id)
+        return BizResponse(data=user_info)
     except Exception as e:
-        return BizResponse(data=False, msg=str(e), status_code=500)
+        return BizResponse(data=None, msg=str(e), status_code=500)
 
 
 
 @router.put("/users/{student_id}")
-def update_user(student_id: int, user_update: UserUpdate, db: Session = Depends(get_db)):
+def update_user(student_id: int, user_update: UserUpdate, repo: IUserRepository = Depends(get_user_repo)):
     try:
-        user = user_svc.update_user(db, student_id, user_update)
-        if user:
-            return BizResponse(data=user)
+        user_info = user_svc.update_user(repo, student_id, user_update)
+        if user_info:
+            return BizResponse(data=user_info)
         else:
-            return BizResponse(data=user, msg=f"updated failed: {student_id} not found.")
+            return BizResponse(data=user_info, msg=f"updated failed: {student_id} not found.")
     
     except Exception as e:
         return BizResponse(data=None, msg=str(e), status_code=500)
