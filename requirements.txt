@@ -1,0 +1,8 @@
+pymysql==1.1.2
+sqlalchemy==2.0.43
+
+pydantic-core==2.33.2
+typing-extensions==4.15.0
+annotated-types==0.7.0
+email-validator==2.3.0
+dnspython==2.8.0

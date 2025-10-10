@@ -1,8 +1,9 @@
 from fastapi import FastAPI
-from app.api.v1.endpoints import book
+from app.api.v1.endpoints import book, user
 
 app = FastAPI()
 app.include_router(book.router, prefix="/api/v1")
+app.include_router(user.router, prefix="/api/v1")
  
 
 @app.get("/")
