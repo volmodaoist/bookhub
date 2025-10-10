@@ -21,7 +21,7 @@ def query_batch_users(page: int = 0, page_size: int = 10, repo: IUserRepository 
         return BizResponse(data=list(), msg=str(e), status_code=500)
     
     
-@router.get("/user/{student_id}")
+@router.get("/users/{student_id}")
 def query_user(student_id: int, repo: IUserRepository = Depends(get_user_repo)):
     try:
         user = user_svc.get_user_by_student_id(repo, student_id)
@@ -33,16 +33,16 @@ def query_user(student_id: int, repo: IUserRepository = Depends(get_user_repo)):
 # TODO 以下代码尚未完成替换，仍有一部分 db, 需要改成 repo (设计模式里面的仓库模式)
 
 @router.post("/users")
-def create_batch_users(users: List[UserCreate], db: Session = Depends(get_db)):
+def create_batch_users(users: List[UserCreate], repo: IUserRepository = Depends(get_user_repo)):
     try:
-        new_user = user_svc.create_batch_users(db, users)
+        new_user = user_svc.create_batch_users(repo, users)
         return BizResponse(data=new_user)
     except Exception as e:
         return BizResponse(data=None, msg=str(e), status_code=500)
     
 
 
-@router.post("/user")
+@router.post("/users")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     try:
         new_user = user_svc.create_user(db, user)
