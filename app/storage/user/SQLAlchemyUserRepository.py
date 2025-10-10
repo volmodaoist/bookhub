@@ -6,6 +6,8 @@ from typing import Optional, List, Dict, Union
 
 
 
+# 这是 PySQL+SQLAlchemy 实现的用户仓库(业务逻辑传入的参数是一个 IUserRepository 类型，而不是具体的子类)
+# 因而可以很方便地替换为其他子类实现，比如基于 PGSQL、MongoDB 用户仓库，或是换成 MySQL 其它三方库, e.g. SQLModel 实现
 class SQLAlchemyUserRepository(IUserRepository):
     def __init__(self, db: Session):
         self.db = db

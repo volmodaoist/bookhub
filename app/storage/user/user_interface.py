@@ -1,6 +1,7 @@
 from typing import Protocol, Optional, List, Union, Dict
 from app.schemas.user import UserCreate, UserUpdate, UserOut
 
+# 这是一个接口协议(也可以使用Python ABC抽象基类实现, 此处使用Protocol会更简洁)
 class IUserRepository(Protocol):
     def get_user_by_uid(self, uid: int) -> Optional[UserOut]:
         ...

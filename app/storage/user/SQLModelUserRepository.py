@@ -5,7 +5,7 @@ from app.schemas.user import UserCreate, UserUpdate, UserOut
 from app.storage.user.user_interface import IUserRepository
 
 
-# SQLModel ORM 模型与 Pydantic 模型无需经过一层转化，直接使用 SQLModel 模型即可
+# SQLModel ORM 模型与 Pydantic 模型无需经过一层转化，直接使用 SQLModel 模型即可 (以下代码未经过测试, 有待验证)
 class SQLModelUserRepository(IUserRepository):
     def __init__(self, db: Session):
         self.db = db
