@@ -40,8 +40,9 @@ class SQLAlchemyUserRepository(IUserRepository):
         # 获取总记录数
         total = self.db.query(User).count()
 
-        # 返回分页后的用户信息 (由的BatchUsersOut 是一个嵌套的 Pydantic BaseModel, 故需要手动调用一下 model_dump 方法来做序列的)
-        return BatchUsersOut(total=total, count=len(users), users=[UserOut.model_validate(u) for u in users]).model_dump()
+        # 返回分页后的用户信息, 由于BatchUsersOut 是一个嵌套的 Pydantic BaseModel, 若是使用 JsonResponse, 
+        # 通常需要手动调用一下 model_dump 方法来做序列的, 为了对齐协议的返回值约定, 我们把这个 model_dump 逻辑转到了 BizResponse 之中
+        return BatchUsersOut(total=total, count=len(users), users=[UserOut.model_validate(u) for u in users])
 
 
     def create_user(self, user_data: UserCreate) -> UserOut:
