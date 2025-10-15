@@ -6,7 +6,7 @@ from app.schemas.user import UserCreate, UserUpdate, UserOut, BatchUsersOut
 from app.storage.user.user_interface import IUserRepository
 
 
-from typing import Optional, List, Dict, Union
+from typing import Optional, List
 
 
     
@@ -18,8 +18,7 @@ class SQLAlchemyUserRepository(IUserRepository):
         self.db = db
 
     def query_student(self, student_id: str) -> User:
-        user = self.db.query(User).filter(User.student_id == student_id).first()
-        return user        
+        return self.db.query(User).filter(User.student_id == student_id).first()
 
     def get_user_by_uid(self, uid: int) -> Optional[UserOut]:
         user = self.db.query(User).filter(User.uid == uid).first()
