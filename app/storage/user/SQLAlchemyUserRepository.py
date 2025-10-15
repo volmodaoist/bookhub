@@ -54,7 +54,7 @@ class SQLAlchemyUserRepository(IUserRepository):
         
         # 获取并更新用户的最新状态（比如自增的 uid）
         self.db.refresh(user)  
-        return UserOut.model_validate(user).model_dump()
+        return UserOut.model_validate(user)
 
 
     def create_batch_users(self, users: List[UserCreate]) -> List[UserOut]:
@@ -84,7 +84,7 @@ class SQLAlchemyUserRepository(IUserRepository):
                 setattr(user, field, value)
         
         self.db.refresh(user)
-        return UserOut.model_validate(user).model_dump()
+        return UserOut.model_validate(user)
 
 
     def delete_user(self, student_id: str) -> Optional[UserOut]:
@@ -95,7 +95,7 @@ class SQLAlchemyUserRepository(IUserRepository):
         
         # 使用事务管理器
         with transaction(self.db):
-            user_info = UserOut.model_validate(user).model_dump()
-            self.db.delete(user)  # 删除用户
+            user_info = UserOut.model_validate(user)
+            self.db.delete(user)
 
         return user_info
